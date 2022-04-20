@@ -1,0 +1,3 @@
+# database
+./hmsBackend/db.sqlite3
+./hmsBackend/Mess/migrations/*
