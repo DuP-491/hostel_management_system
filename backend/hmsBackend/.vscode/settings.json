@@ -1,5 +1,0 @@
-{
-  "terminal.integrated.shellArgs.windows": ["-ExecutionPolicy", "Bypass"],
-  "python.terminal.activateEnvironment": true,
-  "python.defaultInterpreterPath": "F:/Sem 6/Mini Project/Hostel Management System/hostel_management_system/backend/venv/Scripts/python.exe"
-}

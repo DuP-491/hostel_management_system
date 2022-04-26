@@ -1,5 +1,5 @@
 # database
-./hmsBackend/db.sqlite3
-./hmsBackend/Mess/migrations/*
+/hmsBackend/db.sqlite3
+/hmsBackend/Mess/migrations/*
 # VS Code
-./hmsBackend/.vscode
+/hmsBackend/.vscode
