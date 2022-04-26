@@ -37,6 +37,18 @@ def get_items(request):
     serializer = ItemSerializer(items,many=True)
     return Response(serializer.data, status=200)
 
+def delete_item(request):
+    message=''
+    item = Item.objects.filter(name=request.data['name'])
+    if len(item) == '0':
+        message = 'Item with given name does not exist'
+    else:
+        item.delete()
+        message = "Item Deleted Successfully"
+    return Response({
+        "message" : message
+    })
+
 @api_view(['POST','PUT'])
 def update_item(request):
     pass
