@@ -5,8 +5,8 @@ from rest_framework import serializers, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from .models import Item, Category
-from .serializer import ItemSerializer, CategorySerializer
+from .models import Item, Category,Action,Stock
+from .serializer import ItemSerializer, CategorySerializer,StockSerializer,ActionSerializer
 
 # Create your views here.
 
@@ -172,3 +172,36 @@ def delete_category(request):
             "message": "Category removed successfully!"
         }
     )
+
+############ Stock #############
+@api_view(['GET'])
+def stock_controller(request):
+    if request.method == 'GET':
+        pass
+    if request.method == 'POST':
+        pass
+    if request.method == 'PUT':
+        pass
+    if request.method == 'DELETE':
+        pass
+
+def get_stock(request):
+    id = request.data['id']
+    item = get_object_or_404(Item,id=id)
+    stocks = get_object_or_404(Stock,id=id)
+
+
+############ ACTION #############
+
+def action_controller(request):
+    if request.method == 'GET':
+        pass
+    if request.method == 'POST':
+        pass
+    if request.method == 'PUT':
+        pass
+    if request.method == 'DELETE':
+        pass
+
+
+
