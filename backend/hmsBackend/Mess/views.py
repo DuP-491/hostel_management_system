@@ -293,7 +293,7 @@ def update_demand(request):
 @api_view(['GET'])
 def stock_controller(request):
     if request.method == 'GET':
-        pass
+        return get_stock(request)
     if request.method == 'POST':
         pass
     if request.method == 'PUT':
@@ -303,8 +303,23 @@ def stock_controller(request):
 
 def get_stock(request):
     id = request.data['id']
+    if id is None:
+        return Response(
+            status=403,
+            data={
+                "data":"heelo"
+            }
+        )
     item = get_object_or_404(Item,id=id)
-    stocks = get_object_or_404(Stock,id=id)
+    stocks = get_object_or_404(Stock,item=item)
+    print(stocks)
+    serializer = StockSerializer(stocks)
+    return Response(
+        status=201,
+        data={
+            "data":serializer.data
+        }
+    )
 
 
 ############ ACTION #############

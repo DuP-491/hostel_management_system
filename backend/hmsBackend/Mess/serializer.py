@@ -25,8 +25,6 @@ class StockSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stock
         fields = '__all__'
-        model = Category
-        fields = '__all__'
 
 
 class DemandSerializer(serializers.ModelSerializer):
