@@ -8,6 +8,8 @@ from rest_framework import serializers, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from .models import Item, Category, Action, Stock
+from .serializer import ItemSerializer, CategorySerializer, StockSerializer, ActionSerializer
 from .models import Item, Category, Demand, DemandItem
 from .serializer import DemandSerializer, ItemSerializer, CategorySerializer, DemandItemSerializer
 
@@ -287,7 +289,6 @@ def update_demand(request):
 
 ############ DemandItem #############
 
-
 # Method to handle all requests
 
 
@@ -384,3 +385,51 @@ def update_demand_item(request):
                 "message": "Error updating the demand item!"
             }
         )
+
+
+############ Stock #############
+
+@api_view(['GET'])
+def stock_controller(request):
+    if request.method == 'GET':
+        return get_stock(request)
+    if request.method == 'POST':
+        pass
+    if request.method == 'PUT':
+        pass
+    if request.method == 'DELETE':
+        pass
+
+
+def get_stock(request):
+    id = request.data['id']
+    if id is None:
+        return Response(
+            status=403,
+            data={
+                "data": "heelo"
+            }
+        )
+    item = get_object_or_404(Item, id=id)
+    stocks = get_object_or_404(Stock, item=item)
+    print(stocks)
+    serializer = StockSerializer(stocks)
+    return Response(
+        status=201,
+        data={
+            "data": serializer.data
+        }
+    )
+
+
+############ ACTION #############
+
+def action_controller(request):
+    if request.method == 'GET':
+        pass
+    if request.method == 'POST':
+        pass
+    if request.method == 'PUT':
+        pass
+    if request.method == 'DELETE':
+        pass

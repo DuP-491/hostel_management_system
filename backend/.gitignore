@@ -1,5 +1,6 @@
 # database
 /hmsBackend/db.sqlite3
 /hmsBackend/Mess/migrations/*
+/hmsBackend/Mess/__pycache__/*
 # VS Code
 /hmsBackend/.vscode

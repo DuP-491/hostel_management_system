@@ -1,5 +1,7 @@
 from enum import auto
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import dispatcher, receiver
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -128,6 +130,43 @@ class DemandItem(models.Model):
 
     def __str__(self):
         return str(self.itemId)
+
+
+class Action(models.Model):
+    class Action(models.IntegerChoices):
+        NOTH = 0, "Nothing"
+        ADD = 1, "Added"
+        SUB = 2, "Consumed"
+
+    class Unit(models.TextChoices):
+        KG = 'kg', "Kilogram"
+        LT = 'lt', "Litre"
+        NU = 'nu', "No Unit"
+
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    action = models.IntegerField(choices=Action.choices, default=Action.NOTH)
+    date = models.DateTimeField(auto_created=True)
+    quantity = models.FloatField(default=0.0)
+    unit = models.CharField(
+        max_length=5, choices=Unit.choices, default=Unit.NU)
+
+    def __str__(self):
+        return self.item.name + " " + self.action
+
+
+class Stock(models.Model):
+    class Unit(models.TextChoices):
+        KG = 'kg', "Kilogram"
+        LT = 'lt', "Litre"
+        NU = 'nu', "No Unit"
+
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    unit = models.CharField(
+        max_length=5, choices=Unit.choices, default=Unit.NU)
+    quantity = models.FloatField(default=0.0)
+
+    def __str__(self):
+        return self.item.name + " - Stock"
 
 
 @receiver(post_save, sender=DemandItem)
