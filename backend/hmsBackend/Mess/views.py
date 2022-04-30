@@ -290,14 +290,14 @@ def update_demand(request):
 ############ DemandItem #############
 
 ############ Stock #############
-@api_view(['GET'])
+@api_view(['GET','PUT'])
 def stock_controller(request):
     if request.method == 'GET':
         return get_stock(request)
     if request.method == 'POST':
         pass
     if request.method == 'PUT':
-        pass
+        return update_stock(request)
     if request.method == 'DELETE':
         pass
 
@@ -307,12 +307,11 @@ def get_stock(request):
         return Response(
             status=403,
             data={
-                "data":"heelo"
+                "data":"Item Id not provided"
             }
         )
     item = get_object_or_404(Item,id=id)
     stocks = get_object_or_404(Stock,item=item)
-    print(stocks)
     serializer = StockSerializer(stocks)
     return Response(
         status=201,
@@ -321,6 +320,27 @@ def get_stock(request):
         }
     )
 
+def update_stock(request):
+    id = request.data['id']
+    if id is None:
+        return Response(
+            status=403,
+            data={
+                "data": "id not provided"
+            }
+        )
+    item = get_object_or_404(Item, id=id)
+    stocks = get_object_or_404(Stock, item=item)
+    serializer = StockSerializer(stocks,data=request.data,partial=True)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(
+        status=201,
+        data={
+            "data": serializer.data,
+            "message": "Unit Updated Successfully"
+        }
+    )
 
 ############ ACTION #############
 
