@@ -57,6 +57,8 @@ def create_item(request):
 def get_items(request):
     items = Item.objects.all()
 
+    print(request.query_params)
+
     # URL of the form search=field-1:value-1,field-2:value-2...
     # This is the logic to parse such string
     query = request.query_params.get('search')

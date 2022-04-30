@@ -1,5 +1,15 @@
+import ItemTable from "./../../components/Item/ItemTable/ItemTable";
+
+import styles from "./ItemPage.module.css";
+
 const ItemPage = (props) => {
-  return <h1>Item page</h1>;
+  return (
+    <>
+      <div className={styles["item-table"]}>
+        <ItemTable />
+      </div>
+    </>
+  );
 };
 
 export default ItemPage;
