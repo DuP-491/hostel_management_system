@@ -4,7 +4,6 @@ from django.db.models.signals import post_save
 from django.dispatch import dispatcher, receiver
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.dispatch import receiver
-from django.db.models.signals import post_save
 
 
 class Category(models.Model):
@@ -167,8 +166,3 @@ class Stock(models.Model):
 
     def __str__(self):
         return self.item.name + " - Stock"
-
-
-@receiver(post_save, sender=DemandItem)
-def demand_item_created_handler(sender, instance, created, *args, **kwargs):
-    print(instance)
