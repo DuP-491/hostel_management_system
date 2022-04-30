@@ -55,10 +55,11 @@ class Demand(models.Model):
         max_length=50
     )
     date = models.DateTimeField(
-        auto_created=True
+        auto_now_add=True
     )
     itemCount = models.IntegerField(
         default=0,
+        null=False,
         validators=[
             MinValueValidator(0),
             MaxValueValidator(250)
@@ -66,12 +67,15 @@ class Demand(models.Model):
     )
     totalAmount = models.FloatField(
         default=0.0,
+        null=False,
         validators=[
             MinValueValidator(0.0),
             MaxValueValidator(1000000.0)
         ]
     )
     remark = models.CharField(
+        null=True,
+        blank=True,
         max_length=200
     )
 
