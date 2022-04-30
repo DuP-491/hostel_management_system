@@ -18,7 +18,7 @@ def item_controller(request):
     elif request.method == 'POST':
         return create_item(request)
     elif request.method == 'PUT':
-        pass
+        return update_item(request)
     elif request.method == 'DELETE':
         return delete_item(request)
 
@@ -64,7 +64,6 @@ def get_items(request):
 
     size = items.count()
     serializer = ItemSerializer(items, many=True)
-
     return Response(
         status=200,
         data={
@@ -88,7 +87,30 @@ def delete_item(request):
 
 
 def update_item(request):
-    pass
+    id = request.data['id']
+    item = get_object_or_404(Item, id=id)
+    request.data['nameSlug'] = slugify(request.data['name'])
+    message = ''
+    serializer = ItemSerializer(item, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            status=200,
+            data={
+                "status": "success",
+                "message": "Item updated successfully!",
+                "data": serializer.data
+            }
+        )
+    else:
+        return Response(
+            status=400,
+            data={
+                "status": "failed",
+                "message": "Error updating the item!"
+            }
+        )
+
 
 ############ Category #############
 
