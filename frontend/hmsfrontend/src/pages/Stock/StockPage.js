@@ -24,7 +24,79 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import useFetch from "../hooks/useFetch";
 import { Link } from "react-router-dom";
-
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Collapse from '@mui/material/Collapse';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+function Row(props) {
+  const { row,item } = props;
+  const [open, setOpen] = React.useState(false);
+  const [quantityForm,setQuantityForm] = React.useState(0)
+  const quantityChange = (e) => {
+    e.preventDefault();
+    setQuantityForm(e.target.value);
+  }
+  const actionFormSubmit = () =>{
+    let options={
+      method:"POST",
+      body:JSON.stringify({
+        item:item,
+        action:2,
+        quantity:quantityForm
+      }),
+      headers:{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+     
+    }
+    fetch('http://localhost:8000/api/mess/action/',options)
+    .then(setQuantityForm(0))
+  }
+  return (
+    <React.Fragment>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.name}
+        </TableCell>
+        <Link to={{ pathname: `/stock/${row.item.id}` }} state={{itemid:row.item.id,itemname:row.item.name}}>
+              <TableCell component="th" scope="row">
+                {row.item.name}
+              </TableCell>
+              </Link>
+              <TableCell >{row.item.id}</TableCell>
+              <TableCell >{row.item.brand}</TableCell>
+              <TableCell >{row.quantity}</TableCell>
+              <TableCell >{row.unit}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              
+              <Table size="small" aria-label="purchases">
+                <TableBody>
+                <TextField id="outlined-basic" label="Outlined" variant="outlined" value={quantityForm} onChange={quantityChange}  />
+                <Button variant="contained" onClick={actionFormSubmit}>submit</Button>
+                
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
 const StockPage = (props) => {
   // const {data,loading ,error}=useFetch('http://127.0.0.1:8000/api/mess/stock/')
   const [stocks,setStocks]=useState([])
@@ -37,16 +109,17 @@ const StockPage = (props) => {
           setStocks(apiData.data);
           return apiData;
         })
-        .then(data=>console.log(data));
+        // .then(data=>console.log(data));
 },[])
+console.log(stocks)
   return (
   <>
   <h1>Stock page</h1>
   <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table sx={{ minWidth: 650 }} aria-label="collapsible table">
         <TableHead>
           <TableRow>
-            <TableCell>Item Name</TableCell>
+            <TableCell align="right">Item Name</TableCell>
             <TableCell align="right">Item ID</TableCell>
             <TableCell align="right">Brand</TableCell>
             <TableCell align="right">Current Stock</TableCell>
@@ -54,21 +127,8 @@ const StockPage = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {stocks.map((row) => (
-            <TableRow 
-              key={row.item}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <Link to={{ pathname: `/stock/${row.item.id}` }} state={{itemid:row.item.id}}>
-              <TableCell component="th" scope="row">
-                {row.item.name}
-              </TableCell>
-              </Link>
-              <TableCell align="right">{row.item.id}</TableCell>
-              <TableCell align="right">{row.item.brand}</TableCell>
-              <TableCell align="right">{row.quantity}</TableCell>
-              <TableCell align="right">{row.unit}</TableCell>
-            </TableRow>
+        { stocks.map((row) => (
+            <Row key={row.item.id} row={row} item={row.item.id} />
           ))}
         </TableBody>
       </Table>

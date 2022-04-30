@@ -32,7 +32,7 @@ export default function StockDetailPage(props){
     const location = useLocation()
     // console.log(props.match.params.itemid)
     useEffect( () => {
-        setItem(location.state.itemid)
+        setItem(location.state.itemname)
         fetch('http://127.0.0.1:8000/api/mess/action/?id='+location.state.itemid)
             .then(apiData=>apiData.json())
             .then(apiData=>{
@@ -44,17 +44,17 @@ export default function StockDetailPage(props){
     return (
         <>
           <h1>
-            hello
+            Stock Table Entries for {item}
         </h1>
         <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Action</TableCell>
-            <TableCell align="right">Date Time</TableCell>
+            <TableCell align="center">Action</TableCell>
+            <TableCell align="center">Date Time</TableCell>
             {/* <TableCell align="right">Brand</TableCell> */}
-            <TableCell align="right">Quantity</TableCell>
-            <TableCell align="right">Unit</TableCell>
+            <TableCell align="center">Quantity</TableCell>
+            {/* <TableCell align="right">Unit</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -63,12 +63,12 @@ export default function StockDetailPage(props){
               key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
+              <TableCell component="th" align="center" scope="row">
                 {row.action}
               </TableCell>
-              <TableCell align="right">{row.date}</TableCell>
-              <TableCell align="right">{row.quantity}</TableCell>
-              <TableCell align="right">{row.unit}</TableCell>
+              <TableCell align="center">{row.date}</TableCell>
+              <TableCell align="center">{row.quantity}</TableCell>
+              {/* <TableCell align="right">{row.unit}</TableCell> */}
             </TableRow>
           ))}
         </TableBody>

@@ -27,39 +27,56 @@ SECRET_KEY = 'django-insecure-u*q#ac44i!!$6*&4rfke1ns*njl93rb%a7y=s=8e^0f#x8lk^x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
+
     'Mess',
     # third party
     'rest_framework',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
 
+]
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_HEADERS = default_headers + (
-    'Access-Control-Allow-Origin',
-)
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGIN_WHITELIST = [
+#     "http://localhost:8000",
+#     "http://localhost:3000"
+# ]
+
+# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOW_HEADERS = default_headers + (
+#     'Access-Control-Allow-Origin',
+# )
+# CORS_ALLOW_METHODS = [
+#     "DELETE",
+#     "GET",
+#     "OPTIONS",
+#     "PATCH",
+#     "POST",
+#     "PUT",
+# ]
 
 ROOT_URLCONF = 'hmsBackend.urls'
 
@@ -81,7 +98,6 @@ TEMPLATES = [
     },
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
 
 WSGI_APPLICATION = 'hmsBackend.wsgi.application'
 
