@@ -17,11 +17,28 @@ class CategorySerializer(serializers.ModelSerializer):
         fields='__all__'
 
 class ActionSerializer(serializers.ModelSerializer):
+    action = serializers.CharField(
+        source='get_action_display'
+    )
+    class Meta:
+        model = Action
+        fields = '__all__'
+
+class ActionSerializerCreate(serializers.ModelSerializer):
     class Meta:
         model = Action
         fields = '__all__'
 
 class StockSerializer(serializers.ModelSerializer):
+    item = ItemSerializer()
+    unit = serializers.CharField(
+        source='get_unit_display'
+    )
+    class Meta:
+        model = Stock
+        fields = '__all__'
+
+class StockSerializerCreate(serializers.ModelSerializer):
     class Meta:
         model = Stock
         fields = '__all__'
