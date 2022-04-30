@@ -1,6 +1,8 @@
 from enum import auto
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 class Category(models.Model):
@@ -84,6 +86,10 @@ class Demand(models.Model):
 
 
 class DemandItem(models.Model):
+    id = models.CharField(
+        primary_key=True,
+        max_length=50
+    )
     itemId = models.ForeignKey(
         Item,
         to_field="id",
@@ -124,20 +130,6 @@ class DemandItem(models.Model):
         return str(self.itemId)
 
 
-"""
-
-Stock
-item id
-unit
-available qty
-
------------------
-
-Actions
-item id
-action type (consumed/produced)
-date time
-qty
-unit
-
-"""
+@receiver(post_save, sender=DemandItem)
+def demand_item_created_handler(sender, instance, created, *args, **kwargs):
+    print(instance)
