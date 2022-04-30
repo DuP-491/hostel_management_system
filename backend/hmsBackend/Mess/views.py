@@ -55,11 +55,12 @@ def get_items(request):
     # URL of the form search=field-1:value-1,field-2:value-2...
     # This is the logic to parse such string
     query = request.query_params.get('search')
-    for x in query.split(","):
-        y = x.split(":")
-        y[0] = y[0] + "__icontains"
-        print(y[0], y[1])
-        items = items.filter(**{y[0]: y[1]})
+    if query is not None:
+        for x in query.split(","):
+            y = x.split(":")
+            y[0] = y[0] + "__icontains"
+            print(y[0], y[1])
+            items = items.filter(**{y[0]: y[1]})
 
     size = items.count()
     serializer = ItemSerializer(items, many=True)
@@ -86,7 +87,6 @@ def delete_item(request):
     )
 
 
-@api_view(['POST', 'PUT'])
 def update_item(request):
     pass
 
