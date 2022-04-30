@@ -18,7 +18,7 @@ def item_controller(request):
     elif request.method == 'POST':
         return create_item(request)
     elif request.method == 'PUT':
-        pass
+        return update_item(request)
     elif request.method == 'DELETE':
         return delete_item(request)
 
@@ -55,15 +55,15 @@ def get_items(request):
     # URL of the form search=field-1:value-1,field-2:value-2...
     # This is the logic to parse such string
     query = request.query_params.get('search')
-    for x in query.split(","):
-        y = x.split(":")
-        y[0] = y[0] + "__icontains"
-        print(y[0], y[1])
-        items = items.filter(**{y[0]: y[1]})
+    if query is not None:
+        for x in query.split(","):
+            y = x.split(":")
+            y[0] = y[0] + "__icontains"
+            print(y[0], y[1])
+            items = items.filter(**{y[0]: y[1]})
 
     size = items.count()
     serializer = ItemSerializer(items, many=True)
-
     return Response(
         status=200,
         data={
@@ -85,10 +85,24 @@ def delete_item(request):
         }
     )
 
-
-@api_view(['POST', 'PUT'])
 def update_item(request):
-    pass
+    id = request.data['id']
+    item = get_object_or_404(Item,id=id)
+    request.data['nameSlug'] = slugify(request.data['name'])
+    message = ''
+    serializer = ItemSerializer(item,data=request.data,partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        message = 'Item updated successfully'
+    else:
+        message = 'There was some error in updating item'
+    return Response(
+        status=200,
+        data={
+            "status":message,
+            "data":serializer.data
+        }
+    )
 
 ############ Category #############
 
