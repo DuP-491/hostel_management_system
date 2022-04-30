@@ -1,8 +1,9 @@
 from enum import auto
 from django.db import models
 from django.db.models.signals import post_save
-from django.dispatch import dispatcher,receiver
+from django.dispatch import dispatcher, receiver
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.dispatch import receiver
 
 
 class Category(models.Model):
@@ -86,6 +87,10 @@ class Demand(models.Model):
 
 
 class DemandItem(models.Model):
+    id = models.CharField(
+        primary_key=True,
+        max_length=50
+    )
     itemId = models.ForeignKey(
         Item,
         to_field="id",
@@ -126,24 +131,6 @@ class DemandItem(models.Model):
         return str(self.itemId)
 
 
-"""
-
-Stock
-item id
-unit
-available qty
-
------------------
-
-Actions
-item id
-action type (consumed/produced)
-date time
-qty
-unit
-
-"""
-
 class Action(models.Model):
     class Action(models.IntegerChoices):
         NOTH = 0, "Nothing"
@@ -155,11 +142,12 @@ class Action(models.Model):
         LT = 'lt', "Litre"
         NU = 'nu', "No Unit"
 
-    item = models.ForeignKey(Item,on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     action = models.IntegerField(choices=Action.choices, default=Action.NOTH)
     date = models.DateTimeField(auto_now_add=True)
     quantity = models.FloatField(default=0.0)
-    unit = models.CharField(max_length=5,choices=Unit.choices,default=Unit.NU)
+    unit = models.CharField(
+        max_length=5, choices=Unit.choices, default=Unit.NU)
 
     def __str__(self):
         return self.item.name + "-" + self.action
@@ -171,10 +159,10 @@ class Stock(models.Model):
         LT = 'lt', "Litre"
         NU = 'nu', "No Unit"
 
-    item = models.ForeignKey(Item,on_delete=models.CASCADE)
-    unit = models.CharField(max_length=5, choices=Unit.choices,default=Unit.NU)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    unit = models.CharField(
+        max_length=5, choices=Unit.choices, default=Unit.NU)
     quantity = models.FloatField(default=0.0)
 
     def __str__(self):
         return self.item.name + " - Stock"
-

@@ -289,6 +289,104 @@ def update_demand(request):
 
 ############ DemandItem #############
 
+# Method to handle all requests
+
+
+@api_view(['POST', 'GET', 'DELETE', 'PUT'])
+def demand_item_controller(request):
+    if request.method == "POST":
+        return create_demand_item(request)
+    elif request.method == "GET":
+        return get_demand_items(request)
+    elif request.method == "DELETE":
+        return delete_demand_item(request)
+    elif request.method == "PUT":
+        return update_demand_item(request)
+
+
+# Method to create a new demand
+
+
+def create_demand_item(request):
+    request.data['id'] = str(uuid.uuid4())
+    demandItem = DemandItemSerializer(data=request.data)
+    if demandItem.is_valid():
+        demandItem.save()
+        return Response(
+            status=200,
+            data={
+                "status": "success",
+                "message": "Demand item added successfully!",
+                "data": demandItem.data
+            }
+        )
+    else:
+        print(demandItem.errors)
+        return Response(
+            status=400,
+            data={
+                "status": "failed",
+                "message": "An error occurred while adding the demand item."
+            }
+        )
+
+# Method to fetch all existing demands
+
+
+def get_demand_items(request):
+    demandItems = DemandItem.objects.all()
+    size = demandItems.count()
+    data = DemandItemSerializer(demandItems, many=True)
+    return Response(
+        status=200,
+        data={
+            "status": "success",
+            "size": size,
+            "data": data.data
+        }
+    )
+
+# Method to delete a specific demand
+
+
+def delete_demand_item(request):
+    demandItem = get_object_or_404(DemandItem, id=request.data['id'])
+    demandItem.delete()
+    return Response(
+        status=204,
+        data={
+            "status": "success",
+            "message": "Demand item removed successfully!"
+        }
+    )
+
+# Method to update a demand
+
+
+def update_demand_item(request):
+    demandItem = get_object_or_404(DemandItem, id=request.data['id'])
+    serializer = DemandItemSerializer(
+        demandItem, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            status=200,
+            data={
+                "status": "success",
+                "message": "Demand item updated successfully!",
+                "data": serializer.data
+            }
+        )
+    else:
+        return Response(
+            status=400,
+            data={
+                "status": "failed",
+                "message": "Error updating the demand item!"
+            }
+        )
+
+
 ############ Stock #############
 @api_view(['GET','PUT'])
 def stock_controller(request):
@@ -316,7 +414,7 @@ def get_stock(request):
     return Response(
         status=201,
         data={
-            "data":serializer.data
+            "data": serializer.data
         }
     )
 
