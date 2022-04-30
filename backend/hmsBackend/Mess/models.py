@@ -157,12 +157,12 @@ class Action(models.Model):
 
     item = models.ForeignKey(Item,on_delete=models.CASCADE)
     action = models.IntegerField(choices=Action.choices, default=Action.NOTH)
-    date = models.DateTimeField(auto_created=True)
+    date = models.DateTimeField(auto_now_add=True)
     quantity = models.FloatField(default=0.0)
     unit = models.CharField(max_length=5,choices=Unit.choices,default=Unit.NU)
 
     def __str__(self):
-        return self.item.name + " " + self.action
+        return self.item.name + "-" + self.action
 
 
 class Stock(models.Model):

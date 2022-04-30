@@ -343,16 +343,47 @@ def update_stock(request):
     )
 
 ############ ACTION #############
-
+@api_view(['GET','POST'])
 def action_controller(request):
     if request.method == 'GET':
-        pass
+        return get_actions(request)
     if request.method == 'POST':
-        pass
+        return create_action(request)
     if request.method == 'PUT':
         pass
     if request.method == 'DELETE':
         pass
 
+def create_action(request):
+    serializer = ActionSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(
+            status=201,
+            data={
+                "status": "success",
+                "message": "Action added successfully!",
+                "data": serializer.data
+            },
+        )
+    else:
+        return Response(
+            status=400,
+            data={
+                "status": "failed",
+                "message": "An error occurred while adding the action."
+            }
+        )
 
 
+def get_actions(request):
+    id = request.data['id']
+    actions = Action.objects.filter(item=id)
+    serializer = ActionSerializer(actions,many=True)
+    return Response(
+        status=201,
+        data={
+            "status": "success",
+            "data": serializer.data
+        },
+    )
