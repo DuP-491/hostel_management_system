@@ -388,48 +388,103 @@ def update_demand_item(request):
 
 
 ############ Stock #############
-
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 def stock_controller(request):
     if request.method == 'GET':
         return get_stock(request)
     if request.method == 'POST':
         pass
     if request.method == 'PUT':
-        pass
+        return update_stock(request)
     if request.method == 'DELETE':
         pass
 
 
 def get_stock(request):
-    id = request.data['id']
-    if id is None:
-        return Response(
-            status=403,
-            data={
-                "data": "heelo"
-            }
-        )
-    item = get_object_or_404(Item, id=id)
-    stocks = get_object_or_404(Stock, item=item)
-    print(stocks)
-    serializer = StockSerializer(stocks)
+    stocks = Stock.objects.all()
+    query = request.query_params.get('item')
+    if query is not None:
+        stocks = stocks.filter(item=query)
+    size = stocks.count()
+    serializer = StockSerializer(stocks, many=True)
     return Response(
         status=201,
         data={
+            "status": "success",
+            "size": size,
             "data": serializer.data
         }
     )
 
 
+def update_stock(request):
+    id = request.data['id']
+    if id is None:
+        return Response(
+            status=403,
+            data={
+                "data": "id not provided"
+            }
+        )
+    item = get_object_or_404(Item, id=id)
+    stocks = get_object_or_404(Stock, item=item)
+    serializer = StockSerializer(stocks, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(
+        status=201,
+        data={
+            "data": serializer.data,
+            "message": "Unit Updated Successfully"
+        }
+    )
+
 ############ ACTION #############
 
+
+@api_view(['GET', 'POST'])
 def action_controller(request):
     if request.method == 'GET':
-        pass
+        return get_actions(request)
     if request.method == 'POST':
-        pass
-    if request.method == 'PUT':
-        pass
-    if request.method == 'DELETE':
-        pass
+        return create_action(request)
+
+
+def create_action(request):
+    serializer = ActionSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save()
+        return Response(
+            status=201,
+            data={
+                "status": "success",
+                "message": "Action added successfully!",
+                "data": serializer.data
+            },
+        )
+    else:
+        return Response(
+            status=400,
+            data={
+                "status": "failed",
+                "message": "An error occurred while adding the action."
+            }
+        )
+
+
+def get_actions(request):
+
+    actions = Action.objects.all()
+    query = request.query_params.get('item')
+    if query is not None:
+        actions = actions.filter(item=query)
+    size = actions.count()
+    serializer = ActionSerializer(actions, many=True)
+    return Response(
+        status=201,
+        data={
+            "status": "success",
+            "size": size,
+            "data": serializer.data
+        },
+    )
