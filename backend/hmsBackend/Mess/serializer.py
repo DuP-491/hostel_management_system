@@ -6,6 +6,9 @@ from .models import Category, Item, Demand, DemandItem
 
 
 class ItemSerializer(serializers.ModelSerializer):
+    unit = serializers.CharField(
+        source='get_unit_display'
+    )
     class Meta:
         model = Item
         fields = '__all__'

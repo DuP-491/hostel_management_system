@@ -83,7 +83,7 @@ function Row(props) {
         {/* <TableCell>{row.item.id}</TableCell> */}
         <TableCell align="left">{row.item.brand}</TableCell>
         <TableCell align="left">{row.quantity}</TableCell>
-        <TableCell align="left">{row.unit}</TableCell>
+        <TableCell align="left">{row.item.unit}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
