@@ -338,6 +338,10 @@ def create_demand_item(request):
 
 def get_demand_items(request):
     demandItems = DemandItem.objects.all()
+    query = request.query_params.get('demandId')
+    print(query)
+    if query is not None:
+        demandItems = demandItems.filter(demandId=query)
     size = demandItems.count()
     data = DemandItemSerializer(demandItems, many=True)
     return Response(

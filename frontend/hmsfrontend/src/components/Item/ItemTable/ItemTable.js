@@ -29,7 +29,7 @@ const ItemTable = (props) => {
 
   useEffect(() => {
     let arr = [];
-    fetch(`${messApi}/item?page=${page}&limit=${limit}`)
+    fetch(`${messApi}/item/?page=${page}&limit=${limit}`)
       .then((response) => response.json())
       .then((data) => {
         data.data.forEach((item) => {
