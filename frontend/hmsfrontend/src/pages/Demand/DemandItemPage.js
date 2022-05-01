@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import React from "react";
 import { useLocation } from "react-router";
 import CustomTable from "../../components/UI/Table";
 import { messApi } from "../../utilities/serverConfigurations";
@@ -6,6 +7,11 @@ import styles from "./DemandItemPage.module.css";
 import Button from "@mui/material/Button";
 import FullScreenDialog from "../../components/UI/FullScreenDialog";
 import AddDemandItemForm from "./AddDemandItemForm";
+import { Dialog } from "@mui/material";
+import { DialogTitle } from "@mui/material";
+import { DialogContent, DialogContentText } from "@mui/material";
+import { TextField } from "@mui/material";
+import { DialogActions } from "@mui/material";
 
 const DemandItemPage = (props) => {
   const location = useLocation();
@@ -13,6 +19,46 @@ const DemandItemPage = (props) => {
   const [limit, setLimit] = useState(10);
   const [rows, setRows] = useState([]);
   const [isAddOpen, setAddOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [curDemand,setCurDemand] =useState();
+  const [curItem,setCurItem] = useState();
+  const [curDItem,setCurDItem] = useState();
+  const [supply,setSupply] = useState(0);
+  const [amount,setAmount] = useState(0);
+  const [initSupply,setInitSupply] = useState(0); 
+
+  const supplyChangeHandler =  (e) => {
+    setSupply(e.target.value);
+  }
+  const amountChangeHandle = (e) => {
+    setAmount(e.target.value);
+  }
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleUpdateDemand = () => {
+    var totalSupply=(+supply) + (+initSupply);
+    console.log(totalSupply);
+    let options ={
+      method:"PUT",
+      body: JSON.stringify({
+        id:curDItem,
+        itemId:curItem,
+        demandId:curDemand,
+        suppliedQuantity: totalSupply,
+        amount:amount,
+      }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+    fetch(`${messApi}/ditem/`,options)
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setSupply();
+    setAmount();
+  };
 
   const pageChangeHandler = (newPage) => {
     setPage(newPage);
@@ -33,8 +79,15 @@ const DemandItemPage = (props) => {
     { id: "suppliedQuantity", label: "Supplied Qty" },
     { id: "amount", label: "Amount" },
   ];
-
+  const handleSupply = (e,iid,did,ditemid) => {
+    setOpen(true);
+    setCurItem(iid);
+    setInitSupply(did);
+    setCurDItem(ditemid);
+    console.log(initSupply);
+  };
   useEffect(() => {
+    setCurDemand(location.state.demandId);
     let arr = [];
     fetch(`${messApi}/ditem/?demandId=${location.state.demandId}`)
       .then((response) => response.json())
@@ -42,14 +95,17 @@ const DemandItemPage = (props) => {
         res.data.forEach((demandItem) => {
           arr.push({
             id: demandItem.itemId.id,
+            did: demandItem.id,
             name: demandItem.itemId.name,
             brand: demandItem.itemId.brand,
             requiredQuantity: demandItem.requiredQuantity,
             suppliedQuantity: demandItem.suppliedQuantity,
             amount: demandItem.amount,
+            edit: handleSupply,
           });
         });
         setRows(arr);
+        
       });
   }, []);
 
@@ -64,6 +120,7 @@ const DemandItemPage = (props) => {
           rows={rows}
           page={page}
           limit={limit}
+          isEdit={true}
           onPageChanged={pageChangeHandler}
           onLimitChanged={limitChangeHandler}
         />
@@ -84,6 +141,36 @@ const DemandItemPage = (props) => {
         }>
         <AddDemandItemForm demandId={location.state.demandId} />
       </FullScreenDialog>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Supply Info</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Enter Supplied Quantity and Amount Paid
+          </DialogContentText>
+          <TextField
+        className={styles["demand-item-form-field"]}
+        id="suppliedQuantity"
+        label="Supplied Quantity"
+        type="number"
+        variant="outlined"
+        value={supply}
+        onChange={supplyChangeHandler}
+      />
+      <TextField
+        className={styles["demand-item-form-field"]}
+        id="amountQuantity"
+        label="Amount Quantity"
+        type="number"
+        variant="outlined"
+        value={amount}
+        onChange={amountChangeHandle}
+      />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleUpdateDemand}>Submit</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

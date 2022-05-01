@@ -9,17 +9,34 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Edit from "@mui/icons-material/Edit";
 import { messApi } from "../../utilities/serverConfigurations";
 import { useNavigate } from "react-router";
-
+import FullScreenDialog from "../UI/FullScreenDialog";
+import { Button } from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
 const DemandList = (props) => {
   const [demands, setDemands] = React.useState([]);
+  const [isAddOpen, setAddOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [deleteId,setDeleteId] = React.useState();
+  const [toLoad,setToLoad] = React.useState(false);
 
-  let navigate = useNavigate();
 
-  React.useEffect(() => {
+  const handleClickOpen = (e,demandid) => {
+    setOpen(true);
+    setDeleteId(demandid);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const loadDemands = () => {
     let arr = [];
     fetch(`${messApi}/demand/`)
       .then((response) => response.json())
@@ -32,9 +49,39 @@ const DemandList = (props) => {
         });
         setDemands(arr);
       });
-  }, []);
+  }
+  const handleDelete = () => {
+    let options = {
+      method: "DELETE",
+      body: JSON.stringify({
+        id: deleteId
+
+      }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    };
+    fetch(`${messApi}/demand/`,options)
+    .then((apiData) => apiData.json())
+    .then(data=>console.log(data))
+    .then(setToLoad(!toLoad));
+    setOpen(false);
+  };
+  const dialogToggleHandler = (event) => {
+    setAddOpen((prev) => {
+      return !prev;
+    });
+  };
+
+
+  let navigate = useNavigate();
+ 
+  React.useEffect(() => {
+    loadDemands();
+  }, [toLoad]);
 
   return (
+    <>
     <Demo>
       <List dense={false}>
         {demands.map((demand) => {
@@ -54,7 +101,7 @@ const DemandList = (props) => {
                     <Edit />
                   </IconButton>
                   <IconButton edge="end" aria-label="delete">
-                    <DeleteIcon />
+                    <DeleteIcon id={demand.id} variant="outlined" onClick={(e)=>handleClickOpen(e,demand.id)} />
                   </IconButton>
                 </div>
               }>
@@ -66,7 +113,30 @@ const DemandList = (props) => {
           );
         })}
       </List>
+      
     </Demo>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Delete current demand list?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you really want to delete this demand list?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>No</Button>
+          <Button onClick={handleDelete} autoFocus>
+            Proceed
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

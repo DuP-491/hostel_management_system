@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .models import Item, Category, Action, Stock
-from .serializer import ItemSerializer, CategorySerializer, StockSerializer, ActionSerializer, StockSerializerCreate, ActionSerializerCreate,ItemSerializerCreate
+from .serializer import ItemSerializer, CategorySerializer, StockSerializer, ActionSerializer, StockSerializerCreate, ActionSerializerCreate,ItemSerializerCreate,DemandItemSerializerCreate
 from .models import Item, Category, Demand, DemandItem
 from .serializer import DemandSerializer, ItemSerializer, CategorySerializer, DemandItemSerializer
 
@@ -312,7 +312,8 @@ def demand_item_controller(request):
 
 def create_demand_item(request):
     request.data['id'] = str(uuid.uuid4())
-    demandItem = DemandItemSerializer(data=request.data)
+    demandItem = DemandItemSerializerCreate(data=request.data)
+    print(demandItem)
     if demandItem.is_valid():
         demandItem.save()
         return Response(
@@ -339,7 +340,6 @@ def create_demand_item(request):
 def get_demand_items(request):
     demandItems = DemandItem.objects.all()
     query = request.query_params.get('demandId')
-    print(query)
     if query is not None:
         demandItems = demandItems.filter(demandId=query)
     size = demandItems.count()
@@ -372,7 +372,7 @@ def delete_demand_item(request):
 
 def update_demand_item(request):
     demandItem = get_object_or_404(DemandItem, id=request.data['id'])
-    serializer = DemandItemSerializer(
+    serializer = DemandItemSerializerCreate(
         demandItem, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -482,7 +482,7 @@ def create_action(request):
 def get_actions(request):
 
     actions = Action.objects.all()
-    query = request.query_params.get('item')
+    query = request.query_params.get('id')
     if query is not None:
         actions = actions.filter(item=query)
     size = actions.count()

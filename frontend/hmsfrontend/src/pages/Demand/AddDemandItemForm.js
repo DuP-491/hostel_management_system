@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import styles from "./AddDemandItemForm.module.css";
 import { useState } from "react";
 import ItemComboBox from "../../components/Item/ItemComboBox";
+import { messApi } from "../../utilities/serverConfigurations";
 
 const AddDemandItemForm = (props) => {
   const [item, setItem] = useState(null);
@@ -16,9 +17,19 @@ const AddDemandItemForm = (props) => {
   };
 
   const onAddClicked = () => {
-    console.log(item.id);
-    console.log(props.demandId);
-    console.log(requiredQuantity);
+    let options={
+      method:"POST",
+      body: JSON.stringify({
+        itemId:item.id,
+        demandId:props.demandId,
+        requiredQuantity:requiredQuantity
+      }),
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    }
+    fetch(`${messApi}/ditem/`,options)
+    // .then(apiData=>JSON(apiData))
   };
 
   return (
