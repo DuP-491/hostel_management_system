@@ -8,10 +8,11 @@ const columns = [
   { id: "brand", label: "Brand" },
   { id: "desc", label: "Description" },
   { id: "category", label: "Category" },
+  { id: "unit", label:"Unit"},
 ];
 
-const createData = (id, name, brand, desc, category) => {
-  return { id, name, brand, desc, category };
+const createData = (id, name, brand, desc, category,unit) => {
+  return { id, name, brand, desc, category,unit };
 };
 
 const ItemTable = (props) => {
@@ -34,13 +35,13 @@ const ItemTable = (props) => {
       .then((data) => {
         data.data.forEach((item) => {
           arr.push(
-            createData(item.id, item.name, item.brand, item.desc, item.category)
+            createData(item.id, item.name, item.brand, item.desc, item.category,item.unit)
           );
           setRows(arr);
         });
       });
   }, [page, limit]);
-
+  console.log(rows);
   return (
     <Table
       columns={columns}

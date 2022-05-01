@@ -23,6 +23,11 @@ class Category(models.Model):
 
 
 class Item(models.Model):
+    class Unit(models.TextChoices):
+        KG = 'kg', "Kilogram"
+        LT = 'lt', "Litre"
+        NU = 'nu', "No Unit"
+
     id = models.CharField(
         primary_key=True,
         max_length=50
@@ -46,6 +51,11 @@ class Item(models.Model):
         Category,
         to_field="name",
         on_delete=models.CASCADE
+    )
+    unit = models.CharField(
+        max_length=5,
+        choices=Unit.choices,
+        default=Unit.NU
     )
 
     def __str__(self):
