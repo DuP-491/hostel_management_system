@@ -13,6 +13,11 @@ class ItemSerializer(serializers.ModelSerializer):
         model = Item
         fields = '__all__'
 
+class ItemSerializerCreate(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = '__all__'
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

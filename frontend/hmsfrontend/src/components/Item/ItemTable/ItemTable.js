@@ -38,7 +38,6 @@ const ItemTable = (props) => {
             createData(item.id, item.name, item.brand, item.desc, item.category,item.unit)
           );
           setRows(arr);
-          console.log(item.unit);
         });
       });
   }, [page, limit]);
