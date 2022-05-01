@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from .models import Item, Category, Action, Stock
-from .serializer import ItemSerializer, CategorySerializer, StockSerializer, ActionSerializer,StockSerializerCreate,ActionSerializerCreate
+from .serializer import ItemSerializer, CategorySerializer, StockSerializer, ActionSerializer, StockSerializerCreate, ActionSerializerCreate
 from .models import Item, Category, Demand, DemandItem
 from .serializer import DemandSerializer, ItemSerializer, CategorySerializer, DemandItemSerializer
 
@@ -31,6 +31,7 @@ def item_controller(request):
 def create_item(request):
     request.data['nameSlug'] = slugify(request.data['name'])
     request.data['id'] = str(uuid.uuid4())
+    request.data['category'] = slugify(request.data['category'])
 
     serializer = ItemSerializer(data=request.data)
 
