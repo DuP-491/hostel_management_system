@@ -8,7 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Edit from "@mui/icons-material/Edit";
 import { messApi } from "../../utilities/serverConfigurations";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 
 const Demo = styled("div")(({ theme }) => ({
@@ -26,11 +25,9 @@ const DemandList = (props) => {
       .then((response) => response.json())
       .then((res) => {
         res.data.forEach((demand) => {
-          console.log(demand.date);
           demand.date = `${demand.date.split("T")[0]} ${
             demand.date.split("T")[1].split(".")[0]
           }`;
-          console.log(demand.date);
           arr.push(demand);
         });
         setDemands(arr);
