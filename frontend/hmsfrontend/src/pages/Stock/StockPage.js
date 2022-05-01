@@ -33,8 +33,13 @@ function Row(props) {
   const { row, item } = props;
   const [open, setOpen] = React.useState(false);
   const [quantityForm, setQuantityForm] = React.useState(0);
+  const [canSubmit,setCanSubmit] = React.useState(true);
   const quantityChange = (e) => {
     e.preventDefault();
+    if(!isNaN(e.target.value) && e.target.value !=0 && e.target.value <= row.quantity )
+    setCanSubmit(false);
+    else
+    setCanSubmit(true);
     setQuantityForm(e.target.value);
   };
   const actionFormSubmit = () => {
@@ -56,11 +61,12 @@ function Row(props) {
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
+      <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}>
+            onClick={() => setOpen(!open)}
+          >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -70,33 +76,31 @@ function Row(props) {
         <Link
           to={{ pathname: `/stock/${row.item.id}` }}
           state={{ itemid: row.item.id, itemname: row.item.name }}>
-          <TableCell component="th" scope="row">
+          <TableCell component="th" align="left" scope="row">
             {row.item.name}
           </TableCell>
         </Link>
-        <TableCell>{row.item.id}</TableCell>
-        <TableCell>{row.item.brand}</TableCell>
-        <TableCell>{row.quantity}</TableCell>
-        <TableCell>{row.unit}</TableCell>
+        {/* <TableCell>{row.item.id}</TableCell> */}
+        <TableCell align="left">{row.item.brand}</TableCell>
+        <TableCell align="left">{row.quantity}</TableCell>
+        <TableCell align="left">{row.unit}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Table size="small" aria-label="purchases">
-                <TableBody>
-                  <TextField
+            <TextField
                     id="outlined-basic"
-                    label="Outlined"
+                    label="Consumption Form"
                     variant="outlined"
                     value={quantityForm}
                     onChange={quantityChange}
                   />
-                  <Button variant="contained" onClick={actionFormSubmit}>
+
+                  <Button variant="contained" disabled={canSubmit} onClick={actionFormSubmit}>
                     submit
                   </Button>
-                </TableBody>
-              </Table>
             </Box>
           </Collapse>
         </TableCell>
@@ -126,8 +130,9 @@ const StockPage = (props) => {
         <Table sx={{ minWidth: 650 }} aria-label="collapsible table">
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell align="right">Item Name</TableCell>
-              <TableCell align="right">Item ID</TableCell>
+              {/* <TableCell align="right">Item ID</TableCell> */}
               <TableCell align="right">Brand</TableCell>
               <TableCell align="right">Current Stock</TableCell>
               <TableCell align="right">Unit</TableCell>
