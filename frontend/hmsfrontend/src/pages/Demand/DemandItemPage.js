@@ -5,6 +5,7 @@ import { messApi } from "../../utilities/serverConfigurations";
 import styles from "./DemandItemPage.module.css";
 import Button from "@mui/material/Button";
 import FullScreenDialog from "../../components/UI/FullScreenDialog";
+import AddDemandItemForm from "./AddDemandItemForm";
 
 const DemandItemPage = (props) => {
   const location = useLocation();
@@ -81,7 +82,7 @@ const DemandItemPage = (props) => {
             Save
           </Button>
         }>
-        <p>Form here</p>
+        <AddDemandItemForm demandId={location.state.demandId} />
       </FullScreenDialog>
     </>
   );
