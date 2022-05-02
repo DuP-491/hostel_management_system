@@ -481,7 +481,7 @@ def create_action(request):
 
 def get_actions(request):
 
-    actions = Action.objects.all()
+    actions = Action.objects.all().order_by('-date')
     query = request.query_params.get('id')
     if query is not None:
         actions = actions.filter(item=query)

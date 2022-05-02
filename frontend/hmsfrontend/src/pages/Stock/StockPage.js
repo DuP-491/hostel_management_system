@@ -30,10 +30,11 @@ import Collapse from "@mui/material/Collapse";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 function Row(props) {
-  const { row, item } = props;
+  const { row, item,handleReload } = props;
   const [open, setOpen] = React.useState(false);
   const [quantityForm, setQuantityForm] = React.useState(0);
   const [canSubmit,setCanSubmit] = React.useState(true);
+  
   const quantityChange = (e) => {
     e.preventDefault();
     if(!isNaN(e.target.value) && e.target.value !=0 && e.target.value <= row.quantity )
@@ -54,9 +55,11 @@ function Row(props) {
         "Content-Type": "application/json; charset=UTF-8",
       },
     };
-    fetch("http://localhost:8000/api/mess/action/", options).then(
+    fetch("http://localhost:8000/api/mess/action/", options).then(res=>{    
       setQuantityForm(0)
-    );
+      setCanSubmit(true);
+      handleReload();
+    });
   };
   return (
     <React.Fragment>
@@ -112,7 +115,13 @@ const StockPage = (props) => {
   // const {data,loading ,error}=useFetch('http://127.0.0.1:8000/api/mess/stock/')
   const [stocks, setStocks] = useState([]);
   const [size, setSize] = useState(0);
-  useEffect(() => {
+  const [reload,setReload] = React.useState(false);
+
+  const handleReload = () => {
+    setReload(!reload);
+    console.log("hi");
+  }
+    useEffect(() => {
     fetch("http://127.0.0.1:8000/api/mess/stock/")
       .then((apiData) => apiData.json())
       .then((apiData) => {
@@ -121,8 +130,7 @@ const StockPage = (props) => {
         return apiData;
       });
     // .then(data=>console.log(data));
-  }, []);
-  console.log(stocks);
+  }, [reload]);
   return (
     <>
       <h1>Stock page</h1>
@@ -140,7 +148,7 @@ const StockPage = (props) => {
           </TableHead>
           <TableBody>
             {stocks.map((row) => (
-              <Row key={row.item.id} row={row} item={row.item.id} />
+              <Row key={row.item.id} row={row} item={row.item.id} handleReload={handleReload}/>
             ))}
           </TableBody>
         </Table>

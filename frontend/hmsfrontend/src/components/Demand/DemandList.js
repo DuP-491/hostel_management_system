@@ -25,7 +25,8 @@ const DemandList = (props) => {
   const [isAddOpen, setAddOpen] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [deleteId,setDeleteId] = React.useState();
-  const [toLoad,setToLoad] = React.useState(false);
+
+  const {toLoad,setToLoad} = props;
 
 
   const handleClickOpen = (e,demandid) => {
