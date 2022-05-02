@@ -71,3 +71,9 @@ class DemandItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = DemandItem
         fields = '__all__'
+
+
+class DemandItemSerializerCreate(serializers.ModelSerializer):
+    class Meta:
+        model = DemandItem
+        fields = '__all__'

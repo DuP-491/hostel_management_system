@@ -8,6 +8,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
 
 const CustomTable = (props) => {
   const page = props.page;
@@ -53,6 +56,20 @@ const CustomTable = (props) => {
                         </TableCell>
                       );
                     })}
+                    { props.isEdit ? (
+                        <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={(e)=>row.edit(e,row.id,row.suppliedQuantity,row.did)}
+                        >
+    
+                        <Edit />
+                      </IconButton>
+                      ):
+                      ""
+                    }
+                   
+
                   </TableRow>
                 );
               })}
