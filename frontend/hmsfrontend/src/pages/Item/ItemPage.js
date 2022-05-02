@@ -8,7 +8,7 @@ import styles from "./ItemPage.module.css";
 
 const ItemPage = (props) => {
   const [isAddOpen, setAddOpen] = useState(false);
-
+  const [toLoad,setToLoad] = useState(false);
   const dialogToggleHandler = (event) => {
     setAddOpen((prev) => {
       return !prev;
@@ -21,7 +21,7 @@ const ItemPage = (props) => {
         <h1>Items</h1>
       </center>
       <div className={styles["item-table"]}>
-        <ItemTable />
+        <ItemTable toLoad={toLoad} setToLoad={setToLoad} />
       </div>
       <center>
         <Button variant="contained" onClick={dialogToggleHandler}>
@@ -36,7 +36,7 @@ const ItemPage = (props) => {
               Save
             </Button>
           }>
-          <AddItemForm />
+          <AddItemForm toLoad={toLoad} setToLoad={setToLoad} />
         </FullScreenDialog>
       </center>
     </>

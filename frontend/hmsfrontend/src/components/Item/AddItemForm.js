@@ -19,6 +19,8 @@ const AddItemForm = (props) => {
     {label: "kg"},
     {label: "lt"},
   ]
+  const toLoad=props.toLoad;
+  const setToLoad=props.setToLoad;
 
   const nameChangeHandler = (event) => {
     setName(event.target.value);
@@ -51,7 +53,9 @@ const AddItemForm = (props) => {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        setToLoad(!toLoad);
+      })
   };
 
   return (

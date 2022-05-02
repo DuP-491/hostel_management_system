@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Table from "../../UI/Table";
 
 import { messApi } from "../../../utilities/serverConfigurations";
+import { Toll } from "@mui/icons-material";
 
 const columns = [
   { id: "name", label: "Name" },
@@ -19,6 +20,7 @@ const ItemTable = (props) => {
   const [rows, setRows] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const toLoad=props.toLoad;
 
   const pageChangeHandler = (newPage) => {
     setPage(newPage);
@@ -40,7 +42,7 @@ const ItemTable = (props) => {
           setRows(arr);
         });
       });
-  }, [page, limit]);
+  }, [page, limit,toLoad]);
   console.log(rows);
   return (
     <Table
