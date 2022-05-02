@@ -29,18 +29,22 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Collapse from "@mui/material/Collapse";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+
 function Row(props) {
-  const { row, item,handleReload } = props;
+  const { row, item, handleReload } = props;
   const [open, setOpen] = React.useState(false);
   const [quantityForm, setQuantityForm] = React.useState(0);
-  const [canSubmit,setCanSubmit] = React.useState(true);
-  
+  const [canSubmit, setCanSubmit] = React.useState(true);
+
   const quantityChange = (e) => {
     e.preventDefault();
-    if(!isNaN(e.target.value) && e.target.value !=0 && e.target.value <= row.quantity )
-    setCanSubmit(false);
-    else
-    setCanSubmit(true);
+    if (
+      !isNaN(e.target.value) &&
+      e.target.value != 0 &&
+      e.target.value <= row.quantity
+    )
+      setCanSubmit(false);
+    else setCanSubmit(true);
     setQuantityForm(e.target.value);
   };
   const actionFormSubmit = () => {
@@ -55,8 +59,8 @@ function Row(props) {
         "Content-Type": "application/json; charset=UTF-8",
       },
     };
-    fetch("http://localhost:8000/api/mess/action/", options).then(res=>{    
-      setQuantityForm(0)
+    fetch("http://localhost:8000/api/mess/action/", options).then((res) => {
+      setQuantityForm(0);
       setCanSubmit(true);
       handleReload();
     });
@@ -64,12 +68,11 @@ function Row(props) {
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-      <TableCell>
+        <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
-          >
+            onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -90,20 +93,22 @@ function Row(props) {
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-            <TextField
-                    id="outlined-basic"
-                    label="Consumption Form"
-                    variant="outlined"
-                    value={quantityForm}
-                    onChange={quantityChange}
-                  />
+              <TextField
+                id="outlined-basic"
+                label="Consumption Form"
+                variant="outlined"
+                value={quantityForm}
+                onChange={quantityChange}
+              />
 
-                  <Button variant="contained" disabled={canSubmit} onClick={actionFormSubmit}>
-                    submit
-                  </Button>
+              <Button
+                variant="contained"
+                disabled={canSubmit}
+                onClick={actionFormSubmit}>
+                submit
+              </Button>
             </Box>
           </Collapse>
         </TableCell>
@@ -115,13 +120,13 @@ const StockPage = (props) => {
   // const {data,loading ,error}=useFetch('http://127.0.0.1:8000/api/mess/stock/')
   const [stocks, setStocks] = useState([]);
   const [size, setSize] = useState(0);
-  const [reload,setReload] = React.useState(false);
+  const [reload, setReload] = React.useState(false);
 
   const handleReload = () => {
     setReload(!reload);
     console.log("hi");
-  }
-    useEffect(() => {
+  };
+  useEffect(() => {
     fetch("http://127.0.0.1:8000/api/mess/stock/")
       .then((apiData) => apiData.json())
       .then((apiData) => {
@@ -133,7 +138,9 @@ const StockPage = (props) => {
   }, [reload]);
   return (
     <>
-      <h1>Stock page</h1>
+      <center>
+        <h1>Current Stock</h1>
+      </center>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="collapsible table">
           <TableHead>
@@ -148,7 +155,12 @@ const StockPage = (props) => {
           </TableHead>
           <TableBody>
             {stocks.map((row) => (
-              <Row key={row.item.id} row={row} item={row.item.id} handleReload={handleReload}/>
+              <Row
+                key={row.item.id}
+                row={row}
+                item={row.item.id}
+                handleReload={handleReload}
+              />
             ))}
           </TableBody>
         </Table>

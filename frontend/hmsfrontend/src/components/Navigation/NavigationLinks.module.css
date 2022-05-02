@@ -1,0 +1,20 @@
+.navigation-links {
+  list-style: none;
+  display: flex;
+  padding: 10px;
+}
+
+.navigation-links > li {
+  margin-right: 40px;
+  transition: transform 0.2s;
+}
+
+.navigation-links > li:hover {
+  transform: scale(1.1);
+}
+
+.nav-link {
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #ffffff;
+}

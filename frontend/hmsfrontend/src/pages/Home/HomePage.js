@@ -1,5 +1,9 @@
 const HomePage = (props) => {
-  return <h1>Home page</h1>;
+  return (
+    <center>
+      <h1>Welcome</h1>
+    </center>
+  );
 };
 
 export default HomePage;
