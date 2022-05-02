@@ -8,11 +8,18 @@ import { messApi } from "../../utilities/serverConfigurations";
 const AddDemandItemForm = (props) => {
   const [item, setItem] = useState(null);
   const [requiredQuantity, setRequiredQuantity] = useState("");
-
+  const toLoad=props.toLoad;
+  const setToLoad=props.setToLoad;
+  const isDisable=props.setDisable;
+  const setIsDiable=props.setIsDiable;
   const itemChangeHandler = (value) => {
     setItem(value);
   };
   const requiredQuantityChangeHandler = (event) => {
+    // if(!isNaN(e.target.value) && e.target.value !=0 && e.target.value <= row.quantity )
+    // setIsDiable(false);
+    // else
+    // setIsDiable(true);
     setRequiredQuantity(event.target.value);
   };
 
@@ -29,6 +36,9 @@ const AddDemandItemForm = (props) => {
       },
     }
     fetch(`${messApi}/ditem/`,options)
+    .then(res=>{
+      setToLoad(!toLoad);
+    })
     // .then(apiData=>JSON(apiData))
   };
 

@@ -25,7 +25,9 @@ const DemandItemPage = (props) => {
   const [curDItem,setCurDItem] = useState();
   const [supply,setSupply] = useState(0);
   const [amount,setAmount] = useState(0);
-  const [initSupply,setInitSupply] = useState(0); 
+  const [initSupply,setInitSupply] = useState(0);
+  const [toLoad,setToLoad] = useState(false);
+  const [isDisable,setIsDiable] = useState(false);
 
   const supplyChangeHandler =  (e) => {
     setSupply(e.target.value);
@@ -107,7 +109,7 @@ const DemandItemPage = (props) => {
         setRows(arr);
         
       });
-  }, []);
+  }, [toLoad]);
 
   return (
     <>
@@ -139,7 +141,7 @@ const DemandItemPage = (props) => {
             Save
           </Button>
         }>
-        <AddDemandItemForm demandId={location.state.demandId} />
+        <AddDemandItemForm demandId={location.state.demandId} toLoad={toLoad} setToLoad={setToLoad} isDisable={isDisable} setIsDiable={setIsDiable} initSupply={initSupply}/>
       </FullScreenDialog>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Supply Info</DialogTitle>
@@ -168,7 +170,7 @@ const DemandItemPage = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-          <Button onClick={handleUpdateDemand}>Submit</Button>
+          <Button disable={isDisable} onClick={handleUpdateDemand}>Submit</Button>
         </DialogActions>
       </Dialog>
     </>
