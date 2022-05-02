@@ -55,6 +55,10 @@ const DemandItemPage = (props) => {
       },
     }
     fetch(`${messApi}/ditem/`,options)
+    .then(response=>{
+      setToLoad(!toLoad);
+      setOpen(false);
+    })
   };
   const handleClose = () => {
     setOpen(false);
@@ -104,6 +108,8 @@ const DemandItemPage = (props) => {
             suppliedQuantity: demandItem.suppliedQuantity,
             amount: demandItem.amount,
             edit: handleSupply,
+            toLoad: toLoad,
+            setToLoad: setToLoad,
           });
         });
         setRows(arr);
