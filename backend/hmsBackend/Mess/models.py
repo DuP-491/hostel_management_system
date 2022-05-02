@@ -128,7 +128,7 @@ class DemandItem(models.Model):
             MaxValueValidator(100000.0)
         ]
     )
-    # add unit field
+
     amount = models.FloatField(
         default=0.0,
         validators=[
@@ -136,6 +136,9 @@ class DemandItem(models.Model):
             MaxValueValidator(1000000.0)
         ]
     )
+
+    class Meta:
+        unique_together = ('itemId', 'demandId')
 
     def __str__(self):
         return str(self.itemId)
